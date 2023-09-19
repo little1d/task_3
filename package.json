@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "emoji-js": "^3.7.0",
     "marked": "^9.0.2",
     "vue": "^3.3.4"
   },

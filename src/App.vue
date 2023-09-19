@@ -1,11 +1,17 @@
 <script setup>
 import { marked } from 'marked'
 import { ref, onMounted, nextTick } from 'vue'
+import { EmojiConvertor } from 'emoji-js'
+
+// const emoji = new EmojiConvertor()
+// emoji.replace_mode = 'unified'
+// emoji.allow_native = true
 
 const showWriteBox = ref(true)
 const showPreviewBox = ref(false)
 const writeBoxRef = ref(null)
 const markdownContent = ref('')
+
 
 function toggleWriteBox() {
     showWriteBox.value = true
@@ -14,6 +20,7 @@ function toggleWriteBox() {
         if (writeBoxRef.value) {
             writeBoxRef.value.focus()
         }
+        // markdownContent.value = emoji.replace_colons(markdownContent.value)
     })
 }
 
@@ -21,6 +28,19 @@ function togglePreviewBox() {
     showWriteBox.value = false
     showPreviewBox.value = true
 }
+
+// marked.setOptions({
+//     renderer: new marked.Renderer(),
+//     breaks: true,
+//     gfm: true,
+//     // 修改renderer.text函数
+//     renderer: {
+//         text: function(text) {
+//             return emoji.replace_unified(text)
+//         }
+//     }
+// })
+
 
 onMounted(() => {
     if (showWriteBox.value) {
@@ -45,11 +65,15 @@ onMounted(() => {
         </div>
 
         <div class="main">
-            <textarea v-model="markdownContent" ref="writeBoxRef" v-if="showWriteBox" placeholder="Leave a comment" class="google-font write-box"
-                cols="90" rows="20"></textarea>
-            <div v-if="showPreviewBox" class="preview-box" v-html="marked(markdownContent)"></div>
+            <textarea v-model="markdownContent" 
+                      ref="writeBoxRef" 
+                      v-if="showWriteBox" 
+                      placeholder="Leave a comment"
+                      class="google-font write-box" cols="90" rows="20"></textarea>
+            <div v-if="showPreviewBox" class="preview-box" 
+                 v-html="markdownContent ? marked(markdownContent) : 'Nothing to preview'"></div>
         </div>
-
+        <hr>
         <div class="footer google-font">Remember, contributions to this repository should follow our <a href="#">Github
                 Community Guidelines.</a></div>
     </div>
@@ -63,6 +87,8 @@ onMounted(() => {
 }
 
 .container {
+    width: 100%;
+    height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -76,7 +102,8 @@ onMounted(() => {
     /* gap: 1rem; */
 }
 
-.container::before, .container::after{
+.container::before,
+.container::after {
     content: "";
     position: absolute;
     top: 10px;
@@ -84,11 +111,12 @@ onMounted(() => {
     border-width: 12px;
     border-style: solid;
 }
-.container::before{
+
+.container::before {
     border-color: transparent #d0d7de transparent transparent;
 }
 
-.container::after{
+.container::after {
     top: 10px;
     left: -23px;
     border-color: transparent #ffffff transparent transparent;
@@ -141,8 +169,7 @@ onMounted(() => {
 }
 
 .preview-box {
-    width: 500px;
-    height: 200px;
+
     background-color: #fff;
 }
 
@@ -173,4 +200,5 @@ button {
 
 button:hover {
     color: black;
-}</style>
+}
+</style>
