@@ -11,6 +11,7 @@
   "dependencies": {
     "emoji-js": "^3.7.0",
     "marked": "^9.0.2",
+    "prismjs": "^1.29.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {

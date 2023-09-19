@@ -1,6 +1,8 @@
 <script setup>
 import { marked } from 'marked'
 import { ref, onMounted, nextTick } from 'vue'
+import Prism from 'prismjs'
+import 'prismjs/themes/prism-tomorrow.css'
 import { EmojiConvertor } from 'emoji-js'
 
 // const emoji = new EmojiConvertor()
@@ -12,6 +14,15 @@ const showPreviewBox = ref(false)
 const writeBoxRef = ref(null)
 const markdownContent = ref('')
 
+marked.setOptions({
+    highlight: function(code, lang) {
+        if (lang) {
+            return Prism.highlight(code, Prism.languages[lang] || Prism.languages.markup, lang);
+        } else {
+            return code;
+        }
+    }
+});
 
 function toggleWriteBox() {
     showWriteBox.value = true
@@ -27,6 +38,11 @@ function toggleWriteBox() {
 function togglePreviewBox() {
     showWriteBox.value = false
     showPreviewBox.value = true
+    nextTick(() => {
+        if (showPreviewBox) {
+            Prism.highlightAll()
+        }
+    })
 }
 
 // marked.setOptions({
@@ -65,13 +81,11 @@ onMounted(() => {
         </div>
 
         <div class="main">
-            <textarea v-model="markdownContent" 
-                      ref="writeBoxRef" 
-                      v-if="showWriteBox" 
-                      placeholder="Leave a comment"
-                      class="google-font write-box" cols="90" rows="20"></textarea>
-            <div v-if="showPreviewBox" class="preview-box" 
-                 v-html="markdownContent ? marked(markdownContent) : 'Nothing to preview'"></div>
+            <textarea v-model="markdownContent" ref="writeBoxRef" v-if="showWriteBox" placeholder="Leave a comment"
+                class="google-font write-box" cols="90" rows="20"></textarea>
+            <div v-if="showPreviewBox" class="preview-box">
+                <pre><code class="language-markdown" v-html="markdownContent ? marked(markdownContent) : 'Nothing to preview'"></code></pre>
+            </div>
         </div>
         <hr>
         <div class="footer google-font">Remember, contributions to this repository should follow our <a href="#">Github
