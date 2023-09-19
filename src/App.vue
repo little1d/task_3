@@ -63,6 +63,7 @@ onMounted(() => {
 }
 
 .container {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -73,6 +74,24 @@ onMounted(() => {
     padding: 1rem;
     margin: 1rem;
     /* gap: 1rem; */
+}
+
+.container::before, .container::after{
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: -25px;
+    border-width: 12px;
+    border-style: solid;
+}
+.container::before{
+    border-color: transparent #d0d7de transparent transparent;
+}
+
+.container::after{
+    top: 10px;
+    left: -23px;
+    border-color: transparent #ffffff transparent transparent;
 }
 
 .header {
