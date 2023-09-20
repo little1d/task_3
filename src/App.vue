@@ -28,7 +28,7 @@ function togglePreviewBox() {
     showWriteBox.value = false
     showPreviewBox.value = true
     nextTick(() => {
-        if (showPreviewBox) {
+        if (showPreviewBox) {   bvcxz
             // Prism.highlightAll()
         }
     })
@@ -67,7 +67,7 @@ onMounted(() => {
             <textarea v-model="markdownContent" ref="writeBoxRef" v-if="showWriteBox" placeholder="Leave a comment"
                 class="google-font write-box" cols="90" rows="1" @input="adjustTextareaHeight"></textarea>
             <div v-if="showPreviewBox" class="preview-box" >
-                <pre><code class="language-markdown" v-html="markdownContent ? marked(parseMarkdownContent) : 'Nothing to preview'"></code></pre>
+                <pre class="language-markdown google-font" v-html="markdownContent ? marked(parseMarkdownContent) : 'Nothing to preview'"></pre>
             </div>
         </div>
         <hr>
@@ -81,6 +81,11 @@ onMounted(() => {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.language-markdown{
+    padding: 0;
+    margin: 0;
 }
 
 .container {
@@ -170,6 +175,10 @@ onMounted(() => {
 
 .preview-box {
     background-color: #fff;
+    resize: none; /* 禁止文本框的大小调整 */
+    overflow: hidden; /* 隐藏文本框的滚动条 */
+    height: auto; /* 允许文本框的高度根据内同自动调整 */
+    min-height: 300px;
 }
 
 .ll-box {
@@ -188,7 +197,7 @@ onMounted(() => {
 }
 
 .google-font {
-    font-family: Roboto, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 button {
@@ -199,5 +208,9 @@ button {
 
 button:hover {
     color: black;
+}
+
+.preview-box pre{
+    line-height: 1.2;
 }
 </style>
