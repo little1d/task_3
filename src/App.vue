@@ -1,28 +1,12 @@
 <script setup>
 import { marked } from 'marked'
 import { ref, onMounted, nextTick } from 'vue'
-import Prism from 'prismjs'
-import 'prismjs/themes/prism-tomorrow.css'
-import { EmojiConvertor } from 'emoji-js'
-
-// const emoji = new EmojiConvertor()
-// emoji.replace_mode = 'unified'
-// emoji.allow_native = true
 
 const showWriteBox = ref(true)
 const showPreviewBox = ref(false)
 const writeBoxRef = ref(null)
 const markdownContent = ref('')
 
-marked.setOptions({
-    highlight: function(code, lang) {
-        if (lang) {
-            return Prism.highlight(code, Prism.languages[lang] || Prism.languages.markup, lang);
-        } else {
-            return code;
-        }
-    }
-});
 
 function toggleWriteBox() {
     showWriteBox.value = true
@@ -31,7 +15,6 @@ function toggleWriteBox() {
         if (writeBoxRef.value) {
             writeBoxRef.value.focus()
         }
-        // markdownContent.value = emoji.replace_colons(markdownContent.value)
     })
 }
 
@@ -40,23 +23,17 @@ function togglePreviewBox() {
     showPreviewBox.value = true
     nextTick(() => {
         if (showPreviewBox) {
-            Prism.highlightAll()
+            // Prism.highlightAll()
         }
     })
 }
 
-// marked.setOptions({
-//     renderer: new marked.Renderer(),
-//     breaks: true,
-//     gfm: true,
-//     // 修改renderer.text函数
-//     renderer: {
-//         text: function(text) {
-//             return emoji.replace_unified(text)
-//         }
-//     }
-// })
-
+// 文本框根据文字调整大小
+const adjustTextareaHeight=()=>{
+    const textarea = writeBoxRef.value;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`
+}
 
 onMounted(() => {
     if (showWriteBox.value) {
@@ -82,8 +59,8 @@ onMounted(() => {
 
         <div class="main">
             <textarea v-model="markdownContent" ref="writeBoxRef" v-if="showWriteBox" placeholder="Leave a comment"
-                class="google-font write-box" cols="90" rows="20"></textarea>
-            <div v-if="showPreviewBox" class="preview-box">
+                class="google-font write-box" cols="90" rows="1" @input="adjustTextareaHeight"></textarea>
+            <div v-if="showPreviewBox" class="preview-box" >
                 <pre><code class="language-markdown" v-html="markdownContent ? marked(markdownContent) : 'Nothing to preview'"></code></pre>
             </div>
         </div>
@@ -102,7 +79,6 @@ onMounted(() => {
 
 .container {
     width: 100%;
-    height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -171,6 +147,10 @@ onMounted(() => {
 .write-box {
     outline: none;
     border: 1px solid #d0d7de;
+    resize: none; /* 禁止文本框的大小调整 */
+    overflow: hidden; /* 隐藏文本框的滚动条 */
+    height: auto; /* 允许文本框的高度根据内同自动调整 */
+    min-height: 300px;
 }
 
 .write-box:focus {
@@ -183,7 +163,6 @@ onMounted(() => {
 }
 
 .preview-box {
-
     background-color: #fff;
 }
 
