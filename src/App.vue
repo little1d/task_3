@@ -1,12 +1,18 @@
 <script setup>
 import { marked } from 'marked'
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick ,computed} from 'vue'
+import * as emoji from 'node-emoji'
 
+console.log(emoji.emojify('I :heart: :coffee:!'))
 const showWriteBox = ref(true)
 const showPreviewBox = ref(false)
 const writeBoxRef = ref(null)
 const markdownContent = ref('')
 
+
+const parseMarkdownContent = computed(()=>{
+    return emoji.emojify(markdownContent.value)
+})
 
 function toggleWriteBox() {
     showWriteBox.value = true
@@ -61,7 +67,7 @@ onMounted(() => {
             <textarea v-model="markdownContent" ref="writeBoxRef" v-if="showWriteBox" placeholder="Leave a comment"
                 class="google-font write-box" cols="90" rows="1" @input="adjustTextareaHeight"></textarea>
             <div v-if="showPreviewBox" class="preview-box" >
-                <pre><code class="language-markdown" v-html="markdownContent ? marked(markdownContent) : 'Nothing to preview'"></code></pre>
+                <pre><code class="language-markdown" v-html="markdownContent ? marked(parseMarkdownContent) : 'Nothing to preview'"></code></pre>
             </div>
         </div>
         <hr>
