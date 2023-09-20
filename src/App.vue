@@ -1,6 +1,6 @@
 <script setup>
 import { marked } from 'marked'
-import { ref, onMounted, nextTick ,computed} from 'vue'
+import { ref, onMounted, nextTick, computed } from 'vue'
 import * as emoji from 'node-emoji'
 
 console.log(emoji.emojify('I :heart: :coffee:!'))
@@ -10,7 +10,7 @@ const writeBoxRef = ref(null)
 const markdownContent = ref('')
 
 
-const parseMarkdownContent = computed(()=>{
+const parseMarkdownContent = computed(() => {
     return emoji.emojify(markdownContent.value)
 })
 
@@ -28,14 +28,14 @@ function togglePreviewBox() {
     showWriteBox.value = false
     showPreviewBox.value = true
     nextTick(() => {
-        if (showPreviewBox) {   bvcxz
+        if (showPreviewBox) {
             // Prism.highlightAll()
         }
     })
 }
 
 // 文本框根据文字调整大小
-const adjustTextareaHeight=()=>{
+const adjustTextareaHeight = () => {
     const textarea = writeBoxRef.value;
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`
@@ -66,8 +66,8 @@ onMounted(() => {
         <div class="main">
             <textarea v-model="markdownContent" ref="writeBoxRef" v-if="showWriteBox" placeholder="Leave a comment"
                 class="google-font write-box" cols="90" rows="1" @input="adjustTextareaHeight"></textarea>
-            <div v-if="showPreviewBox" class="preview-box" >
-                <pre class="language-markdown google-font" v-html="markdownContent ? marked(parseMarkdownContent) : 'Nothing to preview'"></pre>
+            <div v-if="showPreviewBox" class="preview-box">
+                <pre><code  class="language-markdown google-font" v-html="markdownContent ? marked(parseMarkdownContent) : 'Nothing to preview'"></code></pre>
             </div>
         </div>
         <hr>
@@ -83,7 +83,7 @@ onMounted(() => {
     box-sizing: border-box;
 }
 
-.language-markdown{
+.language-markdown {
     padding: 0;
     margin: 0;
 }
@@ -99,7 +99,7 @@ onMounted(() => {
     border: 1px solid #d0d7de;
     border-radius: 6px;
     padding: 1rem;
-    margin: 1rem;
+    margin: 0.5rem;
     /* gap: 1rem; */
 }
 
@@ -158,9 +158,12 @@ onMounted(() => {
 .write-box {
     outline: none;
     border: 1px solid #d0d7de;
-    resize: none; /* 禁止文本框的大小调整 */
-    overflow: hidden; /* 隐藏文本框的滚动条 */
-    height: auto; /* 允许文本框的高度根据内同自动调整 */
+    resize: none;
+    /* 禁止文本框的大小调整 */
+    overflow: hidden;
+    /* 隐藏文本框的滚动条 */
+    height: auto;
+    /* 允许文本框的高度根据内同自动调整 */
     min-height: 300px;
 }
 
@@ -175,9 +178,12 @@ onMounted(() => {
 
 .preview-box {
     background-color: #fff;
-    resize: none; /* 禁止文本框的大小调整 */
-    overflow: hidden; /* 隐藏文本框的滚动条 */
-    height: auto; /* 允许文本框的高度根据内同自动调整 */
+    resize: none;
+    /* 禁止文本框的大小调整 */
+    overflow: hidden;
+    /* 隐藏文本框的滚动条 */
+    height: auto;
+    /*允许文本框的高度根据内同自动调整 */
     min-height: 300px;
 }
 
@@ -208,9 +214,5 @@ button {
 
 button:hover {
     color: black;
-}
-
-.preview-box pre{
-    line-height: 1.2;
 }
 </style>
