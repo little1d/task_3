@@ -11,6 +11,7 @@ const writeBoxRef = ref(null)
 const markdownContent = ref('')
 const imagePath = ref('')
 const apiKey = ref('public_FW25bgRFE12nwGq1KeZyPhnpscZV')
+const textarea = document.getElementById('write-box')
 
 const handleDrop = (event) => {
     event.preventDefault();
@@ -31,7 +32,10 @@ const uploadImage = async (file) => {
             }
         })
         imagePath.value = res.data.files[0].fileUrl
-        console.log(imagePath.value)
+        // console.log(imagePath)
+        var imageString = "\n\n![dfsad](" + imagePath.value + ")"
+        console.log(imageString)
+        markdownContent.value += imageString
     } catch (err) {
 
     }
@@ -74,11 +78,11 @@ onMounted(() => {
     if (showWriteBox.value) {
         writeBoxRef.value.focus()
     }
-    const dropArea = document.querySelector('.drop-area')
-    dropArea.addEventListener('dragover', (event) => {
-        event.preventDefault()
-    })
-    dropArea.addEventListener('drop', handleDrop)
+    // const dropArea = document.querySelector('.drop-area')
+    // dropArea.addEventListener('dragover', (event) => {
+    //     event.preventDefault()
+    // })
+    // dropArea.addEventListener('drop', handleDrop)
 })
 </script>
 
@@ -99,22 +103,26 @@ onMounted(() => {
 
         <div class="main">
             <textarea v-model="markdownContent" ref="writeBoxRef" v-if="showWriteBox" placeholder="Leave a comment"
-                class="google-font write-box" cols="90" rows="1" @input="adjustTextareaHeight"></textarea>
+                class="google-font write-box" cols="90" rows="1" @input="adjustTextareaHeight" @dragover.prevent
+                @drop="handleDrop" id="write-box">
+            <img :src="imagePath" alt="">
+        </textarea>
             <div v-if="showPreviewBox" class="preview-box">
-                <pre><code  class="language-markdown google-font" v-html="markdownContent ? marked(parseMarkdownContent) : 'Nothing to preview'"></code></pre>
+                <div class="language-markdown google-font"
+                    v-html="markdownContent ? marked(parseMarkdownContent) : 'Nothing to preview'"></div>
             </div>
         </div>
         <hr>
         <div class="footer google-font">Remember, contributions to this repository should follow our <a href="#">Github
                 Community Guidelines.</a></div>
     </div>
-    <div class="drop-area" @dragover.prevent @drop="handleDrop">
+    <!-- <div class="drop-area" @dragover.prevent @drop="handleDrop">
         <p>拖拽图片到此处</p>
     </div>
     <div v-if="imagePath">
         <img :src="imagePath" alt="上传的图片">
         <p>image Path:{{ imagePath }}</p>
-    </div>
+    </div> -->
 </template>
 
 <style scoped>
@@ -218,6 +226,8 @@ onMounted(() => {
 }
 
 .preview-box {
+    text-align: initial;
+
     background-color: #fff;
     resize: none;
     /* 禁止文本框的大小调整 */
