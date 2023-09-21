@@ -2,12 +2,41 @@
 import { marked } from 'marked'
 import { ref, onMounted, nextTick, computed } from 'vue'
 import * as emoji from 'node-emoji'
+import axios from 'axios'
 
-console.log(emoji.emojify('I :heart: :coffee:!'))
+// console.log(emoji.emojify('I :heart: :coffee:!'))
 const showWriteBox = ref(true)
 const showPreviewBox = ref(false)
 const writeBoxRef = ref(null)
 const markdownContent = ref('')
+const imagePath = ref('')
+const apiKey = ref('public_FW25bgRFE12nwGq1KeZyPhnpscZV')
+
+const handleDrop = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    uploadImage(file)
+}
+
+const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    console.log(apiKey)
+    try {
+        //使用axios库发送post请求到Bytescale的api端点
+        let res = await axios.post("https://api.bytescale.com/v2/accounts/FW25bgR/uploads/form_data", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${apiKey.value}`
+            }
+        })
+        imagePath.value = res.data.files[0].fileUrl
+        console.log(imagePath.value)
+    } catch (err) {
+
+    }
+}
+
 
 
 const parseMarkdownContent = computed(() => {
@@ -45,6 +74,11 @@ onMounted(() => {
     if (showWriteBox.value) {
         writeBoxRef.value.focus()
     }
+    const dropArea = document.querySelector('.drop-area')
+    dropArea.addEventListener('dragover', (event) => {
+        event.preventDefault()
+    })
+    dropArea.addEventListener('drop', handleDrop)
 })
 </script>
 
@@ -73,6 +107,13 @@ onMounted(() => {
         <hr>
         <div class="footer google-font">Remember, contributions to this repository should follow our <a href="#">Github
                 Community Guidelines.</a></div>
+    </div>
+    <div class="drop-area" @dragover.prevent @drop="handleDrop">
+        <p>拖拽图片到此处</p>
+    </div>
+    <div v-if="imagePath">
+        <img :src="imagePath" alt="上传的图片">
+        <p>image Path:{{ imagePath }}</p>
     </div>
 </template>
 
@@ -214,5 +255,12 @@ button {
 
 button:hover {
     color: black;
+}
+
+
+.drop-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
 }
 </style>
