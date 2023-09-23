@@ -41,8 +41,6 @@ const uploadImage = async (file) => {
     }
 }
 
-
-
 const parseMarkdownContent = computed(() => {
     return emoji.emojify(markdownContent.value)
 })
@@ -78,11 +76,6 @@ onMounted(() => {
     if (showWriteBox.value) {
         writeBoxRef.value.focus()
     }
-    // const dropArea = document.querySelector('.drop-area')
-    // dropArea.addEventListener('dragover', (event) => {
-    //     event.preventDefault()
-    // })
-    // dropArea.addEventListener('drop', handleDrop)
 })
 </script>
 
@@ -90,9 +83,9 @@ onMounted(() => {
     <div class="container">
         <div class="header">
             <div class="ll-box"></div>
-            <div class="left-box" :class="{ 'selected-box': showWriteBox, 'unselected-box': showPreviewBox }">
-                <button class="left-button" @click="toggleWriteBox"
-                    :class="{ 'selected-font': showPreviewBox }">write</button>
+            <div class="left-box" :class="{ 'selected-box': showWriteBox, 'unselected-box': showPreviewBox }"
+                @click="toggleWriteBox">
+                <button class="left-button" :class="{ 'selected-font': showPreviewBox }">write</button>
             </div>
             <div class="right-box" :class="{ 'selected-box': showPreviewBox, 'unselected-box': showWriteBox }">
                 <button class="right-button" @click="togglePreviewBox"
@@ -116,13 +109,6 @@ onMounted(() => {
         <div class="footer google-font">Remember, contributions to this repository should follow our <a href="#">Github
                 Community Guidelines.</a></div>
     </div>
-    <!-- <div class="drop-area" @dragover.prevent @drop="handleDrop">
-        <p>拖拽图片到此处</p>
-    </div>
-    <div v-if="imagePath">
-        <img :src="imagePath" alt="上传的图片">
-        <p>image Path:{{ imagePath }}</p>
-    </div> -->
 </template>
 
 <style scoped>
@@ -184,9 +170,17 @@ onMounted(() => {
     background-color: #ffffff;
 }
 
+.left-box:hover {
+    cursor: pointer;
+}
+
 .right-box {
     flex: 20%;
     background-color: #ffffff;
+}
+
+.right-box:hover {
+    cursor: pointer;
 }
 
 .selected-font {
@@ -205,11 +199,12 @@ onMounted(() => {
 }
 
 .write-box {
+    width: 600px;
     outline: none;
     border: 1px solid #d0d7de;
     resize: none;
     /* 禁止文本框的大小调整 */
-    overflow: hidden;
+    /* overflow: hidden; */
     /* 隐藏文本框的滚动条 */
     height: auto;
     /* 允许文本框的高度根据内同自动调整 */
@@ -227,14 +222,14 @@ onMounted(() => {
 
 .preview-box {
     text-align: initial;
-
     background-color: #fff;
+    width: 600px;
     resize: none;
     /* 禁止文本框的大小调整 */
     overflow: hidden;
     /* 隐藏文本框的滚动条 */
     height: auto;
-    /*允许文本框的高度根据内同自动调整 */
+    /*允许文本框的高度根据内容自动调整 */
     min-height: 300px;
 }
 
